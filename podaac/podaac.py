@@ -469,10 +469,12 @@ class Podaac:
             url_template = ''
             for entry in root.iter('{http://www.w3.org/2005/Atom}entry'):
                 for element in entry:
-                    if element.tag == '{http://www.w3.org/2005/Atom}link':
-                        if element.attrib['title'] == "Preview Image":
-                            url_template = element.attrib['href']
-                            break
+                    if (
+                        element.tag == '{http://www.w3.org/2005/Atom}link'
+                        and element.attrib['title'] == "Preview Image"
+                    ):
+                        url_template = element.attrib['href']
+                        break
 
             if url_template == '':
                 raise Exception(
@@ -578,9 +580,7 @@ class Podaac:
         url = self.URL + "subset/status?token=" + token
         subset_data = requests.get(url, headers=HEADERS).text
         subset_data_json = json.loads(subset_data)
-        status = subset_data_json['status']
-
-        return status
+        return subset_data_json['status']
 
     def extract_l4_granule(self, dataset_id='', path=''):
         '''This is an additional function that we have provided apart \

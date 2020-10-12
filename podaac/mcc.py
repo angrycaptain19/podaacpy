@@ -48,7 +48,7 @@ class MCC:
             url = self.URL + '?checkers=' + checkers + \
                 '&url-upload=' + url_upload + '&response=' + response
             result = requests.get(url)
-            if result.status_code == 404 or result.status_code == 400 or result.status_code == 503 or result.status_code == 408:
+            if result.status_code in [404, 400, 503, 408]:
                 result.raise_for_status()
 
         except requests.exceptions.HTTPError as error:
@@ -91,7 +91,7 @@ class MCC:
             data = {'CF': 'on', 'ACDD': 'on', 'ACDD-version': acdd_version,
                     'GDS2': 'on', 'GDS2-parameters': gds2_parameters, 'response': response}
             result = requests.post(self.URL, files=files, data=data)
-            if result.status_code == 404 or result.status_code == 400 or result.status_code == 503 or result.status_code == 408:
+            if result.status_code in [404, 400, 503, 408]:
                 result.raise_for_status()
 
         except requests.exceptions.HTTPError as error:

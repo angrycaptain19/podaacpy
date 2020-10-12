@@ -129,10 +129,8 @@ class PodaacUtils:
         # dataset_short_names_level1 = []
         dataset_short_names_level2 = \
             self.list_available_granule_search_level2_dataset_short_names()
-        dataset_short_names_level1 = list(
+        return list(
             set(dataset_short_names) - set(dataset_short_names_level2))
-
-        return dataset_short_names_level1
 
     def list_available_granule_search_level2_dataset_ids(self):
         '''Convenience function which returns an up-to-date \
@@ -141,15 +139,11 @@ class PodaacUtils:
         :returns: a comma-seperated list of granule dataset id's
 
         '''
-        dataset_ids = []
         url = 'https://podaac.jpl.nasa.gov/l2ssIngest/datasets'
         response = requests.get(url)
         data = response.json()
 
-        for item in data["datasets"]:
-            dataset_ids.append(item["persistentId"])
-
-        return dataset_ids
+        return [item["persistentId"] for item in data["datasets"]]
 
     def list_available_granule_search_level2_dataset_short_names(self):
         '''Convenience function which returns an up-to-date \
@@ -158,15 +152,11 @@ class PodaacUtils:
         :returns: a comma-seperated list of granule dataset short names.
 
         '''
-        dataset_ids = []
         url = 'https://podaac.jpl.nasa.gov/l2ssIngest/datasets'
         response = requests.get(url)
         data = response.json()
 
-        for item in data["datasets"]:
-            dataset_ids.append(item["shortName"])
-
-        return dataset_ids
+        return [item["shortName"] for item in data["datasets"]]
 
     def list_level4_dataset_ids(self):
         '''Convenience function which returns an up-to-date \
@@ -222,9 +212,7 @@ class PodaacUtils:
         granule_list = \
             [str(i) for i in granule_search_response.strip().split() 
                 if search_str in i and 'PO.DAAC' not in i]
-        strp_granule_list = \
-            [i.replace('<title>','').replace('</title>','') for i in granule_list]
-        return strp_granule_list
+        return [i.replace('<title>','').replace('</title>','') for i in granule_list]
 
     @staticmethod
     def mine_opendap_urls_from_granule_search(granule_search_response=''):
